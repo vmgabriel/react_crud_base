@@ -1,0 +1,19 @@
+{
+  "name": "reat_crud_base",
+  "version": "0.0.1",
+  "description": "A react crud base",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react;",
+    "test"
+  ],
+  "author": "vmgabriel",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
