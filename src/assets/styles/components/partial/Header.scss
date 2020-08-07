@@ -1,0 +1,38 @@
+// Colors
+@import '../../Vars.scss';
+
+.main-color {
+  background-color: $base-color;
+  color: white;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.with-space {
+  justify-content: space-between;
+}
+
+.only-mobile {
+  display: none;
+}
+
+.only-desktop {
+  display: block;
+}
+
+@media only screen and (max-width: 600px) {
+  .only-mobile {
+    display: block;
+  }
+
+  .only-desktop {
+    display: none;
+  }
+}

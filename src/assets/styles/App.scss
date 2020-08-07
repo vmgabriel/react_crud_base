@@ -1,4 +1,7 @@
+// Base of Sass
+@import './Vars.scss';
+
 body {
-  background-color: Wheat;
+  background-color: $primary-color;
   margin: 0;
 }
