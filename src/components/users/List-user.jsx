@@ -11,144 +11,6 @@ import ClearIcon from '@material-ui/icons/Clear';
 // Images
 import anonUser from '../../assets/static/user.png';
 
-const dataBase = {
-  "count": 12,
-  "message": "All Data",
-  "rows": [
-    {
-      "createdAt": "Tue, 07 Jul 2020 00:06:33 GMT",
-      "deletedAt": null,
-      "email": "email@correo.com",
-      "id": 2,
-      "isValid": true,
-      "lastName": "data",
-      "name": "data",
-      "photoUrl": "https://picsum.photos/200/300",
-      "updatedAt": "Tue, 07 Jul 2020 00:06:38 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 00:02:23 GMT",
-      "deletedAt": null,
-      "email": "correo@correo.com",
-      "id": 3,
-      "isValid": true,
-      "lastName": "establecer",
-      "name": "establecer",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 00:02:23 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 00:18:04 GMT",
-      "deletedAt": null,
-      "email": "correo@correo.com",
-      "id": 8,
-      "isValid": true,
-      "lastName": "establecer",
-      "name": "establecer",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 00:18:04 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 00:18:15 GMT",
-      "deletedAt": null,
-      "email": "correo@correo.com",
-      "id": 9,
-      "isValid": true,
-      "lastName": "establecer",
-      "name": "establecer",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 00:18:15 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:24:44 GMT",
-      "deletedAt": null,
-      "email": "correo@correo.com",
-      "id": 10,
-      "isValid": true,
-      "lastName": "apellidousuario1",
-      "name": "usuario1",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 15:24:44 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:32:21 GMT",
-      "deletedAt": null,
-      "email": "correo2@correo.com",
-      "id": 13,
-      "isValid": true,
-      "lastName": "apellidousuario2",
-      "name": "usuario2",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 15:32:21 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:35:28 GMT",
-      "deletedAt": null,
-      "email": "correo2@correo.com",
-      "id": 14,
-      "isValid": true,
-      "lastName": "apellidousuario2",
-      "name": "usuario2",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 15:35:28 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:42:06 GMT",
-      "deletedAt": null,
-      "email": "correo2@correo.com",
-      "id": 15,
-      "isValid": true,
-      "lastName": "apellidousuario2",
-      "name": "usuario2",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 15:42:06 GMT"
-    },
-    {
-      "createdAt": "Fri, 07 Aug 2020 13:23:59 GMT",
-      "deletedAt": null,
-      "email": "correo3@correo.com",
-      "id": 16,
-      "isValid": true,
-      "lastName": "apellidousuario3",
-      "name": "usuario3",
-      "photoUrl": null,
-      "updatedAt": "Fri, 07 Aug 2020 13:23:59 GMT"
-    },
-    {
-      "createdAt": "Fri, 07 Aug 2020 13:24:40 GMT",
-      "deletedAt": null,
-      "email": "correo3@correo.com",
-      "id": 17,
-      "isValid": true,
-      "lastName": "apellidousuario3",
-      "name": "usuario3",
-      "photoUrl": "https://picsum.photos/200/300",
-      "updatedAt": "Fri, 07 Aug 2020 13:24:40 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:31:20 GMT",
-      "deletedAt": "Thu, 09 Jul 2020 12:52:53 GMT",
-      "email": "correo2@correo.com",
-      "id": 11,
-      "isValid": false,
-      "lastName": "apellidousuario2",
-      "name": "usuario0",
-      "photoUrl": null,
-      "updatedAt": "Wed, 08 Jul 2020 18:00:41 GMT"
-    },
-    {
-      "createdAt": "Tue, 07 Jul 2020 15:31:34 GMT",
-      "deletedAt": "Thu, 09 Jul 2020 12:53:19 GMT",
-      "email": "correo2@correo.com",
-      "id": 12,
-      "isValid": false,
-      "lastName": "apellidousuario2",
-      "name": "usuario2",
-      "photoUrl": null,
-      "updatedAt": "Tue, 07 Jul 2020 15:31:34 GMT"
-    }
-  ]
-};
 
 const getIconValidation = (validation) => (
   (validation)
@@ -171,6 +33,34 @@ const toDataValid = ({ id, name, lastName, email, isValid, photoUrl }) => (
   }
 );
 
+const createFilter = (search) => {
+  if (search === '') return undefined;
+  return [
+    {
+      "column": "name",
+      "op": "like",
+      "value": search,
+      "type_data": "str"
+    },
+    {
+      "column": "lastName",
+      "op": "like",
+      "value": search,
+      "type_data": "str"
+    },
+    {
+      "column": "email",
+      "op": "like",
+      "value": search,
+      "type_data": "str"
+    }
+  ]
+};
+
+const createOrder = (name, direction) => {
+  const flag = (direction == 'asc') ? '' : '-';
+  return flag + name;
+};
 
 function ListUser() {
   const columnsBase = [
@@ -178,23 +68,50 @@ function ListUser() {
     { title: 'Name', field: 'name' },
     { title: 'Last Name', field: 'lastName' },
     { title: 'Email', field: 'email' },
-    { title: 'Is Active', field: 'isValid' },
   ];
 
   const getUsers = (query) => {
     return new Promise((resolve, reject) => {
       console.log('query get - ', query);
-      const url = 'http://localhost:7202/api/v0/users';
+      console.log('query page - ', query.page);
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          "filters": {
+            "and_data": [
+              {
+                "column": "isValid",
+                "op": "=",
+                "value": true,
+                "type_data": "bool"
+              }
+            ],
+            "or_data": createFilter(query.search),
+            "default": (query.search === "") ? undefined : 'AND'
+          },
+          "joins": [],
+          "attributes": []
+        })
+      }
+      let url = 'http://localhost:7202/api/v0/users/filter?';
+      url += `limit=${query.pageSize}`;
+      url += `&offset=${query.page}`;
+      url += (query.orderBy &&
+              query.orderBy.field != 'avatar' &&
+              query.orderBy.field != 'isValid')
+           ? `&orders=${createOrder(query.orderBy.field, query.orderDirection)}`
+           : '';
       try {
-        fetch(url)
+        fetch(url, options)
           .then(resolve => resolve.json())
           .then(result => {
             console.log('result - ', result);
             const dataValues = result.rows.map(toDataValid);
             resolve({
               data: dataValues,
-              page: 1,
-              totalCount: dataBase.count
+              page: query.page,
+              totalCount: result.count
             });
           });
       } catch(err) {
@@ -211,6 +128,9 @@ function ListUser() {
         title="Users"
         columns={columnsBase}
         data={getUsers}
+        options={{
+          exportButton: true
+        }}
         editable={{
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve) => {
