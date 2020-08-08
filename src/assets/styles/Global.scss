@@ -1,0 +1,75 @@
+// Base of Sass
+@import './Vars.scss';
+
+.main-color {
+  background-color: $base-color;
+  color: white;
+  &:visited {
+    background-color: $base-color;
+    color: white;
+  }
+}
+
+.center {
+  display: flex;
+  align-items: center;
+}
+
+.center-hor {
+  justify-content: center;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.with-space {
+  justify-content: space-between;
+}
+
+.only-mobile {
+  display: none;
+}
+
+.only-desktop {
+  display: block;
+}
+
+.margin-menu {
+  margin-left: 225px;
+}
+
+.margin-base {
+  margin-left: 40px;
+}
+
+.order-padding {
+  padding-left: 1em;
+}
+
+.max-width {
+  width: 100%;
+}
+
+.image-circle {
+  border-radius: 100%;
+}
+
+.min-image {
+  width: 40px;
+  height: 40px;
+}
+
+@media only screen and (max-width: 600px) {
+  .only-mobile {
+    display: block;
+  }
+
+  .only-desktop {
+    display: none;
+  }
+}

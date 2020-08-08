@@ -1,38 +1,30 @@
 // Colors
 @import '../../Vars.scss';
 
-.main-color {
-  background-color: $base-color;
-  color: white;
+.hide-menu {
+  width: 73px;
 }
 
-.center {
-  display: flex;
-  align-items: center;
+.drawer {
+  width: 240px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.row {
-  flex-direction: row;
+.drawer-open {
+  width: 240px;
+  transition: width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
 }
 
-.with-space {
-  justify-content: space-between;
+.drawer-close {
+  width: 57px;
+  overflow-x: hidden;
+  transition: width 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
 }
 
-.only-mobile {
-  display: none;
-}
-
-.only-desktop {
-  display: block;
-}
-
-@media only screen and (max-width: 600px) {
-  .only-mobile {
-    display: block;
-  }
-
-  .only-desktop {
-    display: none;
+.item-active {
+  color: $base-color-marked;
+  &:visited {
+    color: $base-color-marked;
   }
 }

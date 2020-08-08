@@ -5,3 +5,18 @@ body {
   background-color: $primary-color;
   margin: 0;
 }
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+span {
+  font-weight: 900;
+  margin-left: 0.8em;
+}
+
+a:link, a:visited {
+  color: $base-color;
+  text-decoration: none;
+}

@@ -1,11 +1,8 @@
 import React from 'react';
+import clsx from 'clsx';
 
-import '../assets/styles/App.scss';
-
-const HelloWorld = () => (
-  <div>
-    <h1>Hola Mundo</h1>
-  </div>
-)
+const HelloWorld = ({ margin }) => (
+  <h1>Hola Mundo</h1>
+);
 
 export default HelloWorld;

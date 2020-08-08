@@ -1,30 +1,69 @@
 // Develop: vmgabriel
 
 import React from 'react';
+import clsx from 'clsx';
+import { Route, Link, NavLink } from 'react-router-dom';
 
 // Material
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+
+import IconButton from '@material-ui/core/IconButton';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+// Icons
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MenuIcon from '@material-ui/icons/Menu';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import SearchIcon from '@material-ui/icons/Search';
+import PeopleIcon from '@material-ui/icons/People';
+import DetailsIcon from '@material-ui/icons/Details';
 
 // Scss
 import '../../assets/styles/components/partial/Header.scss';
 
-export default function NavBar() {
+export default function NavBar({ withMargin }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const urls = [
+    {
+      id: 1,
+      name: "Users",
+      url: '/users',
+      icon: <PeopleIcon />
+    },
+    {
+      id: 2,
+      name: "Hello",
+      url: '/hello',
+      icon: <DetailsIcon />
+    }
+  ];
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawer = () => {
+    withMargin(!open);
+    setOpen(!open);
+  }
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -95,23 +134,29 @@ export default function NavBar() {
     </Menu>
   );
 
+  const putIcon = ({ id, name, url, icon }) => (
+    <ListItem button key={id}>
+      <ListItemIcon>
+        <NavLink to={url} activeClassName="item-active">
+          {icon}
+        </NavLink>
+      </ListItemIcon>
+      <ListItemText primary=<NavLink to={url} activeClassName="item-active">{name}</NavLink> />
+      </ListItem>
+  );
+
   return (
     <React.Fragment>
       <AppBar className="main-color" position="static">
         <Toolbar className="main-color row with-space">
-          <div className="center row">
-            <div className="only-mobile">
-              <IconButton
-                className="menuButton"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-              >
-                <MenuIcon />
-              </IconButton>
-            </div>
+          <div className={clsx('center','row',{
+            'margin-menu': open,
+            'margin-base': !open,
+          })}>
             <Typography variant="h6" noWrap>
-              Crud Base
+              <Link to="/" className="main-color">
+                Crud Base
+              </Link>
             </Typography>
           </div>
 
@@ -151,6 +196,29 @@ export default function NavBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <Drawer
+        variant="permanent"
+        className={clsx('drawer', {
+          'drawer-open': open,
+          'drawer-close': !open,
+        })}
+        classes={{
+          paper: clsx({
+            'drawer-open': open,
+            'drawer-close': !open,
+          }),
+        }}
+      >
+        <div>
+          <IconButton onClick={handleDrawer}>
+            <ChevronRightIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          {urls.map(putIcon)}
+        </List>
+      </Drawer>
     </React.Fragment>
   );
 }
