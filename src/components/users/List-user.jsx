@@ -1,12 +1,17 @@
 // Develop: vmgabriel
 
+// Libraries
 import React from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 // Icons
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+
+// Material
+import Button from '@material-ui/core/Button';
 
 // Images
 import anonUser from '../../assets/static/user.png';
@@ -124,6 +129,13 @@ function ListUser() {
   return (
     <div>
       <h1>User's List</h1>
+
+      <Link to="/users/create">
+        <Button variant="contained">
+          Create New User
+        </Button>
+      </Link>
+
       <MaterialTable
         title="Users"
         columns={columnsBase}

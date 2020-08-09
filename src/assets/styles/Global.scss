@@ -64,6 +64,21 @@
   height: 40px;
 }
 
+.content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.box {
+  width: 80%;
+  margin-bottom: 2em;
+  * {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+}
+
 @media only screen and (max-width: 600px) {
   .only-mobile {
     display: block;

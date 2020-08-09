@@ -12,7 +12,9 @@ import Footer from './partial/Footer.jsx';
 // Routes
 import Home from './home/Home.jsx';
 import HelloWorld from './HelloWorld.jsx';
+
 import ListUser from './users/List-user.jsx';
+import CreateUpdateUser from './users/Create-update-user.jsx';
 
 // Styles
 import '../assets/styles/App.scss';
@@ -34,6 +36,7 @@ export default function App() {
           <Route exact path="/hello" component={HelloWorld} />
 
           <Route exact path="/users" component={ListUser} />
+          <Route exact path="/users/create" component={CreateUpdateUser} />
         </div>
 
         <Footer />
