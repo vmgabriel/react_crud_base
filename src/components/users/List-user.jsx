@@ -2,9 +2,11 @@
 
 // Libraries
 import React from 'react';
-import MaterialTable from 'material-table';
-import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import MaterialTable from 'material-table';
+import { useSnackbar } from 'notistack';
 
 // Icons
 import CheckIcon from '@material-ui/icons/Check';
@@ -68,6 +70,13 @@ const createOrder = (name, direction) => {
 };
 
 function ListUser() {
+  const history = useHistory();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const sendAlert = (message) => (variant='default') => {
+    enqueueSnackbar(message, {variant});
+  };
+
   const columnsBase = [
     { title: 'Avatar', field: 'avatar' },
     { title: 'Name', field: 'name' },
@@ -75,10 +84,30 @@ function ListUser() {
     { title: 'Email', field: 'email' },
   ];
 
+  const deleteUser = (idUser) => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      };
+      const url = `http://localhost:7202/api/v0/users/${idUser}`;
+      fetch(url, options)
+        .then(resolve => resolve.json())
+        .then(result => {
+          console.log('result delete - ', result);
+          sendAlert('User Deleted Correctly')('success');
+          resolve();
+        })
+        .catch(error => {
+          console.log('Error User delete -', error);
+          sendAlert('A Error has Ocurred into Service Data in Delete')('error');
+          reject(err);
+      });
+    });
+  };
+
   const getUsers = (query) => {
     return new Promise((resolve, reject) => {
-      console.log('query get - ', query);
-      console.log('query page - ', query.page);
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -121,10 +150,17 @@ function ListUser() {
           });
       } catch(err) {
         console.log('error -', error);
+        sendAlert('A Error has Ocurred into Service Data')('error');
         reject(err);
       }
     });
   };
+
+  const handleUpdateClick = (_, rowData) => {
+    history.push(`/users/${rowData.key}/edit`);
+  };
+
+  const handleDeleteClick = (oldData) => deleteUser(oldData.key);
 
   return (
     <div>
@@ -144,31 +180,15 @@ function ListUser() {
           exportButton: true
         }}
         editable={{
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                if (oldData) {
-                  setState((prevState) => {
-                    const data = [...prevState.data];
-                    data[data.indexOf(oldData)] = newData;
-                    return { ...prevState, data };
-                  });
-                }
-              }, 600);
-            }),
-          onRowDelete: (oldData) =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                setState((prevState) => {
-                  const data = [...prevState.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  return { ...prevState, data };
-                });
-              }, 600);
-            }),
+          onRowDelete: handleDeleteClick,
         }}
+        actions={[
+          {
+            icon: 'edit',
+            tooltip: 'Edit User',
+            onClick: handleUpdateClick
+          }
+        ]}
       />
     </div>
   );

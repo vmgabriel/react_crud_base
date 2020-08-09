@@ -3,7 +3,7 @@
 // Libraries
 import React from 'react';
 import clsx from 'clsx';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // Components
 // Partial
@@ -32,11 +32,14 @@ export default function App() {
           'margin-menu': margin,
           'margin-base': !margin,
         })}>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/hello" component={HelloWorld} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/hello" component={HelloWorld} />
 
-          <Route exact path="/users" component={ListUser} />
-          <Route exact path="/users/create" component={CreateUpdateUser} />
+            <Route exact path="/users" component={ListUser} />
+            <Route exact path="/users/create" component={CreateUpdateUser} />
+            <Route exact path="/users/:idUser/edit" component={CreateUpdateUser} />
+          </Switch>
         </div>
 
         <Footer />

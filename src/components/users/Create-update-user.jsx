@@ -2,24 +2,82 @@
 
 // Libraries
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 // Material
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-const reEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const isValidateEmail = data => (!reEmail.test(data.toLowerCase()))
-                      ? { error: true, message: 'Email not Valid' }
-                      : { error: false, message: '' }
-;
-const isValidateClear = data => (!data || data === '')
-                      ? { error: true, message: 'Data clear' }
-                      : { error: false, message: '' }
-;
+// Validation
+import validate from '../../utils/validation.js';
 
-const CreateUpdateUser = () => {
+const CreateUpdateUser = (props) => {
+  const idUser = props.match.params.idUser;
+  const history = useHistory();
   const [user, setUser] = React.useState({});
   const [form, setForm] = React.useState([]);
+  const [mode, setMode] = React.useState('');
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const sendAlert = (message) => (variant='default') => {
+    enqueueSnackbar(message, {variant});
+  };
+
+  const handleToBack = () => {
+    history.goBack();
+  };
+
+  const getUser = () => {
+    const url = `http://localhost:7202/api/v0/users/${idUser}`;
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(resolve => resolve.json())
+        .then(result => {
+          if (result.message == 'User Found') {
+            resolve({
+              name: result.data.name,
+              lastName: result.data.lastName,
+              email: result.data.email
+            });
+          } else {
+            console.log('Error in Get User by Id - ', result);
+            sendAlert('User Not Found')('error');
+            handleToBack();
+            resolve();
+          }
+        })
+        .catch(error => {
+          console.log('Error in Get User by Id - ', error);
+          sendAlert('Error in Get User By Id')('error');
+          reject(error);
+        });
+    });
+  };
+
+  const getMode = () => {
+    const dataPath = history.location.pathname.split('/');
+    const nMode = dataPath[dataPath.length - 1];
+    setMode(nMode);
+    if (nMode == 'edit') {
+      // Edit
+      getUser()
+        .then(res => {
+          if (res.hasOwnProperty('name')) {
+            console.log('to get user - ', res);
+            setUser(res);
+          }
+        })
+        .catch(error => {
+          handleToBack();
+        })
+      ;
+    }
+  };
+
+  const userDefault = {
+    photoUrl: ''
+  };
 
   React.useEffect(() => {
     const validationAttributes = [{
@@ -42,42 +100,80 @@ const CreateUpdateUser = () => {
       isError: false,
       messageError: ''
     }];
+
+    getMode();
+
     setForm(validationAttributes);
   }, []);
   const filterValidation = field => form.filter(fr => fr.field === field)[0];
 
-  const validateControl = ({ name, field }) => (validation) => {
-    const result = validation(user[name]);
-    let filter = filterValidation(field);
-    filter.isError = result.error;
-    filter.messageError = result.message;
-    return filter;
+  const createUser = () => {
+    const url = 'http://localhost:7202/api/v0/users';
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...userDefault,
+        ...user
+      })
+    };
+    return new Promise((resolve, reject) => {
+      try {
+        fetch(url, options).then(resolve => resolve.json()).then(result => {
+          console.log('result api create user - ', result);
+          sendAlert('User Created Correctly')('success');
+          resolve(true);
+        });
+      } catch(err) {
+        console.log('Error to Saved User - ', err);
+        sendAlert('User Saved Error')('error');
+        resolve(false);
+      }
+    });
   };
 
-  const validate = ({ name, field, required, isEmail }) => {
-    const validateField = validateControl({ name, field });
-
-    let validationAttribute = {
-      name,
-      field,
-      required,
-      isEmail,
-      isError: false,
-      messageError: ''
+  const updateUser = () => {
+    const url = `http://localhost:7202/api/v0/users/${idUser}`;
+    const options = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
     };
-
-    validationAttribute = (required && !validationAttribute.isError)
-                        ? validateField(isValidateClear)
-                        : validationAttribute;
-    validationAttribute = (isEmail && !validationAttribute.isError)
-                        ? validateField(isValidateEmail)
-                        : validationAttribute;
-
-    return validationAttribute;
+    return new Promise((resolve, reject) => {
+      fetch(url, options)
+        .then(resolve => resolve.json())
+        .then(result => {
+          console.log('result api edit user - ', result);
+          sendAlert('User Updated Correctly')('success');
+          resolve(true);
+        })
+        .catch(err => {
+          console.log('Error to Updated User - ', err);
+          sendAlert('User Edit Error')('error');
+          resolve(false);
+        });
+    });
   };
 
   const handleCreateClick = () => {
-    setForm(form.map(validate));
+    const validation = form.map(validate(user));
+    const isError = validation.reduce((acc, curr) => curr.isError || acc, false);
+    if (isError) {
+      setForm(validation);
+    } else {
+      if (mode == 'create') {
+        createUser().then(isSaved => {
+          console.log('is Saved - ', isSaved);
+          handleToBack();
+
+        }).catch(err => console.err);
+      } else {
+        updateUser().then(isSaved => {
+          console.log('is Saved - ', isSaved);
+          handleToBack();
+        }).catch(err => console.err);
+      }
+    }
   };
 
   const handleChangeForm = (event) => {
@@ -85,7 +181,7 @@ const CreateUpdateUser = () => {
       ...user,
       [event.target.name]: event.target.value
     });
-  }
+  };
 
   const getIfError = (field) => {
     const validation = filterValidation(field);
@@ -99,7 +195,9 @@ const CreateUpdateUser = () => {
 
   return (
     <div>
-      <h1>Create User</h1>
+      <h1>{mode} User</h1>
+
+      <Button variant="contained" onClick={handleToBack}>Back</Button>
 
       <div className="content">
         <form className="box">
@@ -112,6 +210,7 @@ const CreateUpdateUser = () => {
             label="Name"
             onChange={handleChangeForm}
             defaultValue={user.name || ''}
+            value={user.name || ''}
           />
           <TextField
             required
@@ -122,6 +221,7 @@ const CreateUpdateUser = () => {
             label="Last Name"
             onChange={handleChangeForm}
             defaultValue={user.lastName || ''}
+            value={user.lastName || ''}
           />
           <TextField
             required
@@ -133,10 +233,11 @@ const CreateUpdateUser = () => {
             type="email"
             onChange={handleChangeForm}
             defaultValue={user.email || ''}
+            value={user.email || ''}
           />
 
           <Button variant="contained" color="primary" onClick={handleCreateClick}>
-            Create
+            {mode}
           </Button>
         </form>
       </div>

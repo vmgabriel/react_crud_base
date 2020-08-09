@@ -62,8 +62,7 @@ module.exports = {
     })
   ],
   devServer: {
-    disableHostCheck: true,
-    historyApiFallback: true,
-    hot: true
+    publicPath: '/',
+    historyApiFallback: true
   }
 };
